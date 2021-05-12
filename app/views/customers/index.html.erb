@@ -15,8 +15,7 @@
   <tbody>
     <% @customers.each do |customer| %>
       <tr>
-        <td><%= customer.first_name %></td>
-        <td><%= customer.last_name %></td>
+        <td><%= customer.full_name %></td>
         <td><%= customer.phone %></td>
         <td><%= customer.email %></td>
         <td><%= link_to 'Show', customer %></td>
