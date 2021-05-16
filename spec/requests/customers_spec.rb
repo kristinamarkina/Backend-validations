@@ -24,6 +24,7 @@ RSpec.describe "CustomersControllers", type: :request do
     end
   end
   describe "get new customer path" do
+    #passes
     it "renders the :new template" do
       get new_customer_path
       expect(response).to render_template(:new)
