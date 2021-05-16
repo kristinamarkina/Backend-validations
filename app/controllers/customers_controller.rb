@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  before_action :set_customer, only: [:show, :edit, :update, :destroy]
+  before_action :set_customer, only: [:edit, :update, :destroy]
 
   # GET /customers
   # GET /customers.json
@@ -10,6 +10,11 @@ class CustomersController < ApplicationController
   # GET /customers/1
   # GET /customers/1.json
   def show
+    if Customer.exists?(params[:id])
+      @customer = Customer.find(params[:id])
+    else
+      redirect_to customers_url
+    end
   end
 
   # GET /customers/new
