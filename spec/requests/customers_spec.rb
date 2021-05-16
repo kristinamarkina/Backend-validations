@@ -37,7 +37,7 @@ RSpec.describe "CustomersControllers", type: :request do
       expect(response).to render_template(:edit)
     end
   end
-  describe "post customers_path with valid data" do
+  describe "post customers_path with invalid data" do
     it "does not save a new entry or redirect" do
       customer_attributes = FactoryBot.attributes_for(:customer)
       customer_attributes.delete(:first_name)
