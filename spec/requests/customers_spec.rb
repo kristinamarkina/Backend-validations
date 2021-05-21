@@ -53,22 +53,21 @@ RSpec.describe "CustomersControllers", type: :request do
     #not passes yet
     it "updates an entry and redirects to the show path for the customer" do
       customer = FactoryBot.create(:customer)
-      customer.first_name = 'Test'
-      expect {
-        put customer_path(id: customer.id), params: {customer: customer[params]}
-      }.to change(customer, :first_name).to('Test')
-      expect(response).to redirect_to customers_path(id: customer.id)
+      phone = '9190001111'
+      put customer_path(id: customer.id, params: {customer:{phone: phone}})
+      customer.reload
+      expect(customer.phone).to eq(phone)
+      expect(response).to redirect_to customer_path(id: customer.id)
     end
   end
   describe "put customer_path with invalid data" do
     #not passes yet
     it "does not update the customer record or redirect" do
-      customer1 = FactoryBot.build(:customer)
-      customer2 = customer1
-      customer2.first_name = ''
-      expect {
-        put customer_path(id: customer1.id), params: {customer: customer2}
-      }.to_not change(customer1, :first_name)
+      customer = FactoryBot.create(:customer)
+      phone = '919000111'
+      put customer_path(id: customer.id, params: {customer:{phone: phone}})
+      customer.reload
+      expect(customer.phone).to_not eq(phone)
       expect(response).to render_template(:edit)
     end
   end
