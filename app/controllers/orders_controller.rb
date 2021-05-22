@@ -1,7 +1,6 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: [:edit, :update, :destroy]
-  before_action :set_customer,  only: [:create, :edit, :update, :destroy]
-
+  before_action :set_customer,  only: [:edit, :update, :destroy]
 
   # GET /orders
   def index
@@ -19,14 +18,16 @@ class OrdersController < ApplicationController
 
   # GET /orders/new
   def new
+    @order = Order.new
   end
 
   # POST /orders
   def create
     @order = Order.new(order_params)
+    set_customer
     if @order.save
       flash.notice = "The order record was created successfully."
-      redirect_to @order.customer
+      redirect_to @order
     else
       flash.now.alert = @order.errors.full_messages.to_sentence
       render :new
@@ -39,9 +40,9 @@ class OrdersController < ApplicationController
 
   # PATCH/PUT /orders/1
   def update
-    if @order.update(customer_params)
-      flash.notice = "The customer record was updated successfully."
-      redirect_to @customer
+    if @order.update(order_params)
+      flash.notice = "The order record was updated successfully."
+      redirect_to @order
     else
       flash.now.alert = @order.errors.full_messages.to_sentence
       render :edit
@@ -71,6 +72,6 @@ class OrdersController < ApplicationController
   end
   # Only allow a list of trusted parameters through.
   def order_params
-    params.require(:order).permit(:product_name, :product_count, :customer)
+    params.require(:order).permit(:product_name, :product_count, :customer_id)
   end
 end
