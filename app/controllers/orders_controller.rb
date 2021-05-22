@@ -1,6 +1,7 @@
 class OrdersController < ApplicationController
-  before_action :set_customer,  only: [:create, :edit, :update, :destroy]
   before_action :set_order, only: [:edit, :update, :destroy]
+  before_action :set_customer,  only: [:create, :edit, :update, :destroy]
+
 
   # GET /orders
   def index
@@ -22,10 +23,10 @@ class OrdersController < ApplicationController
 
   # POST /orders
   def create
-    @order = @customer.orders.create(order_params)
+    @order = Order.new(order_params)
     if @order.save
       flash.notice = "The order record was created successfully."
-      redirect_to @customer
+      redirect_to @order.customer
     else
       flash.now.alert = @order.errors.full_messages.to_sentence
       render :new
@@ -59,14 +60,15 @@ class OrdersController < ApplicationController
 
   private
   # Use callbacks to share common setup or constraints between actions.
-  def set_customer
-    @customer = Customer.find(params[:customer])
-  end
+
 
   def set_order
-    @order = @customer.orders.find(params[:id])
+    @order = Order.find(params[:id])
   end
 
+  def set_customer
+    @customer = @order.customer
+  end
   # Only allow a list of trusted parameters through.
   def order_params
     params.require(:order).permit(:product_name, :product_count, :customer)
