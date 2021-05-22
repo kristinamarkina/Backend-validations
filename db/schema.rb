@@ -13,20 +13,22 @@
 ActiveRecord::Schema.define(version: 20210521184249) do
 
   create_table "customers", force: :cascade do |t|
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "phone"
-    t.string   "email"
+    t.index ["customer_id"]
+    t.string   "first_name", null: false
+    t.string   "last_name", null: false
+    t.string   "phone", null: false
+    t.string   "email", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "orders", force: :cascade do |t|
-    t.string   "product_name"
-    t.integer  "product_count"
-    t.integer  "customer_id"
+    t.integer "order_id"
+    t.string   "product_name", null: false
+    t.integer  "product_count", null: false
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.integer  "customer_id", null: false
     t.index ["customer_id"], name: "index_orders_on_customer_id"
   end
 

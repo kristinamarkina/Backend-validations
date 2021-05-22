@@ -1,14 +1,13 @@
 class OrdersController < ApplicationController
+  before_action :set_customer,  only: [:create, :edit, :update, :destroy]
   before_action :set_order, only: [:edit, :update, :destroy]
 
   # GET /orders
-  # GET /orders.json
   def index
     @orders = Order.all
   end
 
   # GET /orders/1
-  # GET /orders/1.json
   def show
     if Order.exists?(params[:id])
       @order = Order.find(params[:id])
@@ -19,32 +18,29 @@ class OrdersController < ApplicationController
 
   # GET /orders/new
   def new
-    @order = Order.new
-  end
-
-  # GET /orders/1/edit
-  def edit
   end
 
   # POST /orders
-  # POST /orders.json
   def create
-    @order = Order.new(order_params)
+    @order = @customer.orders.create(order_params)
     if @order.save
       flash.notice = "The order record was created successfully."
-      redirect_to @order
+      redirect_to @customer
     else
       flash.now.alert = @order.errors.full_messages.to_sentence
       render :new
     end
   end
 
+  # GET /orders/1/edit
+  def edit
+  end
+
   # PATCH/PUT /orders/1
-  # PATCH/PUT /orders/1.json
   def update
     if @order.update(customer_params)
       flash.notice = "The customer record was updated successfully."
-      redirect_to @order
+      redirect_to @customer
     else
       flash.now.alert = @order.errors.full_messages.to_sentence
       render :edit
@@ -63,8 +59,12 @@ class OrdersController < ApplicationController
 
   private
   # Use callbacks to share common setup or constraints between actions.
+  def set_customer
+    @customer = Customer.find(params[:customer])
+  end
+
   def set_order
-    @order = Order.find(params[:id])
+    @order = @customer.orders.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
