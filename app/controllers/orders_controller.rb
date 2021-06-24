@@ -1,6 +1,8 @@
 class OrdersController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, with: :catch_not_found
   before_action :set_order, only: [:edit, :update, :destroy]
   before_action :set_customer,  only: [:edit, :update, :destroy]
+  layout "order_layout"
 
   # GET /orders
   def index
@@ -24,7 +26,6 @@ class OrdersController < ApplicationController
   # POST /orders
   def create
     @order = Order.new(order_params)
-    set_customer
     if @order.save
       flash.notice = "The order record was created successfully."
       redirect_to @order
@@ -38,7 +39,7 @@ class OrdersController < ApplicationController
   def edit
   end
 
-  # PATCH/PUT /orders/1
+  # PUT /orders/1
   def update
     if @order.update(order_params)
       flash.notice = "The order record was updated successfully."
@@ -72,5 +73,10 @@ class OrdersController < ApplicationController
   # Only allow a list of trusted parameters through.
   def order_params
     params.require(:order).permit(:product_name, :product_count, :customer_id)
+  end
+  def catch_not_found(e)
+    Rails.logger.debug("We had a not found exception.")
+    flash.alert = e.to_s
+    redirect_to orders_path
   end
 end
